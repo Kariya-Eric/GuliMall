@@ -10,7 +10,7 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>ware</artifactId>
+    <artifactId>gulimall-ware</artifactId>
 
     <dependencies>
         <dependency>
@@ -24,10 +24,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <groupId>org.kariya</groupId>
+            <artifactId>gulimall-common</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
-
-
 </project>

@@ -9,7 +9,7 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>coupon</artifactId>
+    <artifactId>gulimall-coupon</artifactId>
 
     <dependencies>
         <dependency>
@@ -23,8 +23,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <groupId>org.kariya</groupId>
+            <artifactId>gulimall-common</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 
