@@ -6,16 +6,22 @@ spring:
         namespace: d669b795-eb71-4583-981e-b5efda9b15b7
     #网关相关配置
     gateway:
+      #      前端项目都默认带上api前缀，然后赚翻到人人fast
       routes:
-        - id: baidu_route
-          uri: https://www.baidu.com
+        - id: product_route
+          uri: lb://gulimall-product
           predicates:
-            - Query=url,baidu
+            - Path=/api/product/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        - id: renren_fast_route
+          uri: lb://renren-fast
+          predicates:
+            - Path=/api/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
 
-        - id: qq_route
-          uri: https://www.qq.com
-          predicates:
-            - Query=url,qq
+
 
   application:
     name: gulimall-gateway
