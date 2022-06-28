@@ -8,12 +8,24 @@ spring:
     gateway:
       #      前端项目都默认带上api前缀，然后赚翻到人人fast
       routes:
+
+#       第三方路由匹配
+        - id: third_route
+          uri: lb://gulimall-thirdserver
+          predicates:
+            - Path=/api/thirdserver/**
+          filters:
+            - RewritePath=/api/thirdserver/(?<segment>.*),/$\{segment}
+
+#        商品服务请求路由匹配
         - id: product_route
           uri: lb://gulimall-product
           predicates:
             - Path=/api/product/**
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+#        renrenfast后台管理系统路由匹配
         - id: renren_fast_route
           uri: lb://renren-fast
           predicates:

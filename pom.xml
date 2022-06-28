@@ -17,6 +17,7 @@
         <module>gulimall-ware</module>
         <module>gulimall-common</module>
         <module>gulimall-gateway</module>
+        <module>gulimall-thirdserver</module>
     </modules>
 
     <!--统一管理jar包版本-->
@@ -28,6 +29,7 @@
         <log4j.version>1.2.17</log4j.version>
         <druid.version>1.1.16</druid.version>
         <fastjson.version>1.2.78</fastjson.version>
+        <oss.version>3.10.2</oss.version>
     </properties>
 
     <dependencyManagement>
@@ -80,6 +82,16 @@
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
             </dependency>
+
+            <!-- Aliyun Spring Boot dependencies -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>aliyun-spring-boot-dependencies</artifactId>
+                <version>1.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

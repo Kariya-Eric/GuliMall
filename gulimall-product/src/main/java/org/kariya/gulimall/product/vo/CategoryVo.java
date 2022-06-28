@@ -1,5 +1,6 @@
 package org.kariya.gulimall.product.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.kariya.gulimall.product.entity.CategoryEntity;
 
@@ -18,5 +19,7 @@ public class CategoryVo {
     private Integer productCount;
     private String productUnit;
     //用于表示是否有子分类
+    //若字段为空则不包含该字段
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<CategoryVo> chidren;
 }
