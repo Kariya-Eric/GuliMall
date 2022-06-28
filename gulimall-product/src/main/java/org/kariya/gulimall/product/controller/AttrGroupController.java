@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.kariya.gulimall.product.vo.AttrGroupEntityVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,6 +38,7 @@ public class AttrGroupController {
     @RequestMapping("/list")
     //@RequiresPermissions("product:attrgroup:list")
     public R list(@RequestParam Map<String, Object> params){
+
         PageUtils page = attrGroupService.queryPage(params);
 
         return R.ok().put("page", page);
@@ -49,7 +51,7 @@ public class AttrGroupController {
     @RequestMapping("/info/{attrGroupId}")
     //@RequiresPermissions("product:attrgroup:info")
     public R info(@PathVariable("attrGroupId") Long attrGroupId){
-		AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
+        AttrGroupEntityVo attrGroup = attrGroupService.getInfoById(attrGroupId);
 
         return R.ok().put("attrGroup", attrGroup);
     }

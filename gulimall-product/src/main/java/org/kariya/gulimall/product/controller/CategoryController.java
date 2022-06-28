@@ -1,9 +1,13 @@
 package org.kariya.gulimall.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.alibaba.fastjson.JSON;
+import org.json.JSONObject;
+import org.kariya.gulimall.product.vo.CategoryVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,14 +36,14 @@ public class CategoryController {
     private CategoryService categoryService;
 
     /**
-     * 列表
+     * 查出所有分类以及子分类，以树形结构组装起来
      */
-    @RequestMapping("/list")
+    @RequestMapping("/list/tree")
     //@RequiresPermissions("product:category:list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = categoryService.queryPage(params);
-
-        return R.ok().put("page", page);
+        //PageUtils page = categoryService.queryPage(params);
+        List<CategoryVo> entities=categoryService.listWithTree();
+        return R.ok().put("data", entities);
     }
 
 
@@ -59,9 +63,8 @@ public class CategoryController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("product:category:save")
-    public R save(@RequestBody CategoryEntity category){
-		categoryService.save(category);
-
+    public R save(@RequestBody CategoryVo category){
+		categoryService.saveCategoryVo(category);
         return R.ok();
     }
 
@@ -71,8 +74,7 @@ public class CategoryController {
     @RequestMapping("/update")
     //@RequiresPermissions("product:category:update")
     public R update(@RequestBody CategoryEntity category){
-		categoryService.updateById(category);
-
+        categoryService.updateById(category);
         return R.ok();
     }
 
@@ -82,9 +84,30 @@ public class CategoryController {
     @RequestMapping("/delete")
     //@RequiresPermissions("product:category:delete")
     public R delete(@RequestBody Long[] catIds){
-		categoryService.removeByIds(Arrays.asList(catIds));
-
+		//categoryService.removeByIds(Arrays.asList(catIds));
+        categoryService.removeMenuByIds(catIds);
         return R.ok();
     }
 
+    //新增Category前的名称校验
+    @RequestMapping("/menuExist/{name}")
+    public R menuExist(@PathVariable("name")String name){
+        boolean exist=categoryService.menuExist(name);
+        if(!exist){
+            return R.ok();
+        }
+        return R.error("目录名已存在");
+    }
+
+    //拖拽category之后排序方法
+    @RequestMapping("/sort")
+    public R sort(@RequestBody Map<String,Object> paramMap){
+        Map<String,Object> startMap= (Map<String, Object>) paramMap.get("start");
+        Map<String,Object> endMap= (Map<String, Object>) paramMap.get("end");
+        CategoryEntity start=JSON.parseObject(JSON.toJSONString(startMap), CategoryEntity.class);
+        CategoryEntity end=JSON.parseObject(JSON.toJSONString(endMap),CategoryEntity.class);
+        String type= (String) paramMap.get("type");
+        categoryService.sort(start,end,type);
+        return R.ok();
+    }
 }
