@@ -1,7 +1,9 @@
 package org.kariya.gulimall.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import org.kariya.gulimall.product.service.CategoryBrandRelationService;
 import org.kariya.gulimall.product.vo.CategoryVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -18,10 +20,13 @@ import org.kariya.common.utils.Query;
 import org.kariya.gulimall.product.dao.CategoryDao;
 import org.kariya.gulimall.product.entity.CategoryEntity;
 import org.kariya.gulimall.product.service.CategoryService;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+    @Autowired
+    private CategoryBrandRelationService categoryBrandRelationService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -35,6 +40,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Override
     public List<CategoryVo> listWithTree() {
+        //name为过滤条件
         //查出所有分类
         List<CategoryEntity> categoryEntities = baseMapper.selectList(null);
         //将categoryentity list转换为categoryvo list
@@ -145,14 +151,14 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                         entity.setSort(entity.getSort() - 1);
                     }
                 }
-                if(entity.getCatId().equals(start.getCatId())){
+                if (entity.getCatId().equals(start.getCatId())) {
                     entity.setSort(end.getSort());
                 }
                 return entity;
             }).collect(Collectors.toList());
             if ("before".equals(type)) {
-                start.setSort(end.getSort()-1);
-            }else{
+                start.setSort(end.getSort() - 1);
+            } else {
                 start.setSort(end.getSort());
             }
             sortedList.add(start);
@@ -160,6 +166,19 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         //对sortedCategory进行遍历进行update,此处存在疑惑就是未影响的会走数据库吗？
         for (CategoryEntity entity : sortedList) {
             baseMapper.updateById(entity);
+        }
+    }
+
+    //与品牌更新相同，需要耿勋数据库内其他表格的冗余字段
+    @Override
+    @Transactional
+    public void updateCategory(CategoryEntity category) {
+        CategoryEntity categoryEntity = this.baseMapper.selectById(category.getCatId());
+        //更新目录
+        this.baseMapper.updateById(category);
+        if (!categoryEntity.getName().equals(category.getName())) {
+            //更新relation表
+            categoryBrandRelationService.updateCategory(category.getCatId(), category.getName());
         }
     }
 
@@ -183,8 +202,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     private List<CategoryVo> getChildrens(CategoryVo entity, List<CategoryVo> categoryEntities) {
         List<CategoryVo> collect = categoryEntities.stream().filter(categoryVo ->
                         //此处必须要用equals,用双等好会丢失数据。
-                        entity.getCatId().equals(categoryVo.getParentCid()))
-                .map(vo -> {
+                        entity.getCatId().equals(categoryVo.getParentCid())
+                ).map(vo -> {
                     vo.setChidren(getChildrens(vo, categoryEntities));
                     return vo;
                 }).sorted((vo1, vo2) -> (vo1.getSort() == null ? 0 : vo1.getSort()) - (vo2.getSort() == null ? 0 : vo2.getSort()))

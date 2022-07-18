@@ -2,7 +2,6 @@ package org.kariya.gulimall.product.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import org.kariya.gulimall.product.entity.CategoryEntity;
 
 import java.util.List;
 

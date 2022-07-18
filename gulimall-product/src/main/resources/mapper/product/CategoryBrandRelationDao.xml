@@ -3,7 +3,7 @@
 
 <mapper namespace="org.kariya.gulimall.product.dao.CategoryBrandRelationDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="org.kariya.gulimall.product.entity.CategoryBrandRelationEntity" id="categoryBrandRelationMap">
         <result property="id" column="id"/>
         <result property="brandId" column="brand_id"/>
@@ -12,5 +12,10 @@
         <result property="catelogName" column="catelog_name"/>
     </resultMap>
 
+    <update id="updateBrand">
+        update `pms_category_brand_relation`
+        set `brand_name`=#{name}
+        where `brand_id` = #{brandId}
+    </update>
 
 </mapper>

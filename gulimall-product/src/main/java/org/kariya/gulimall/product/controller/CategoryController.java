@@ -40,7 +40,7 @@ public class CategoryController {
      */
     @RequestMapping("/list/tree")
     //@RequiresPermissions("product:category:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(){
         //PageUtils page = categoryService.queryPage(params);
         List<CategoryVo> entities=categoryService.listWithTree();
         return R.ok().put("data", entities);
@@ -74,7 +74,7 @@ public class CategoryController {
     @RequestMapping("/update")
     //@RequiresPermissions("product:category:update")
     public R update(@RequestBody CategoryEntity category){
-        categoryService.updateById(category);
+        categoryService.updateCategory(category);
         return R.ok();
     }
 
