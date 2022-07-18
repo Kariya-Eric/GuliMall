@@ -28,5 +28,7 @@ public interface CategoryService extends IService<CategoryEntity> {
     void saveCategoryVo(CategoryVo category);
 
     void sort(CategoryEntity start, CategoryEntity end, String type);
+
+    void updateCategory(CategoryEntity category);
 }
 

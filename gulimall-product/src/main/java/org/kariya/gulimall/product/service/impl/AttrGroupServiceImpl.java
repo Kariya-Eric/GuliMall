@@ -33,16 +33,15 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
         String catId = (String) params.get("catId");
         String name = (String) params.get("name");
         IPage<AttrGroupEntity> page = null;
+        QueryWrapper<AttrGroupEntity> wrapper = new QueryWrapper();
+        wrapper.and((w) -> {
+            w.eq("attr_group_id", name).or().like("attr_group_name", name);
+        });
         if (Long.valueOf(catId) == 0) {
             page = this.page(
-                    new Query<AttrGroupEntity>().getPage(params),
-                    new QueryWrapper<AttrGroupEntity>()
-            );
+                    new Query<AttrGroupEntity>().getPage(params), wrapper);
         } else {
-            QueryWrapper<AttrGroupEntity> wrapper = new QueryWrapper();
-            wrapper.eq("catelog_id", catId).and((w) -> {
-                w.eq("attr_group_id", name).or().like("attr_group_name", name);
-            });
+            wrapper.eq("catelog_id", catId);
             page = this.page(
                     new Query<AttrGroupEntity>().getPage(params), wrapper);
         }
@@ -51,33 +50,33 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 
     @Override
     public AttrGroupEntityVo getInfoById(Long attrGroupId) {
-        AttrGroupEntity attrGroup=baseMapper.selectById(attrGroupId);
-        AttrGroupEntityVo attrGroupEntityVo=switchEntityToVo(attrGroup);
+        AttrGroupEntity attrGroup = baseMapper.selectById(attrGroupId);
+        AttrGroupEntityVo attrGroupEntityVo = switchEntityToVo(attrGroup);
         Long catelogId = attrGroup.getCatelogId();
-        List<Long> catelogIds=new ArrayList<>();
-        catelogIds=getCatelogIds(catelogId,catelogIds);
-        long[] ids=new long[catelogIds.size()];
-        for(int i=0;i<catelogIds.size();i++){
-            ids[i]=catelogIds.get(catelogIds.size()-i-1);
+        List<Long> catelogIds = new ArrayList<>();
+        catelogIds = getCatelogIds(catelogId, catelogIds);
+        long[] ids = new long[catelogIds.size()];
+        for (int i = 0; i < catelogIds.size(); i++) {
+            ids[i] = catelogIds.get(catelogIds.size() - i - 1);
         }
         attrGroupEntityVo.setCatelogIds(ids);
         return attrGroupEntityVo;
     }
 
     //根据分类id找出级联菜单的数组
-    private List<Long> getCatelogIds(Long parentCid, List<Long> cateList){
+    private List<Long> getCatelogIds(Long parentCid, List<Long> cateList) {
         //根据catelogid获取catelogid数组
-        if(parentCid!=0){
+        if (parentCid != 0) {
             cateList.add(parentCid);
             CategoryEntity entity = categoryService.getById(parentCid);
-            return getCatelogIds(entity.getParentCid(),cateList);
+            return getCatelogIds(entity.getParentCid(), cateList);
         }
         return cateList;
     }
 
     //将AttrGroupEntity转换为Vo
-    private AttrGroupEntityVo switchEntityToVo(AttrGroupEntity attrGroupEntity){
-        AttrGroupEntityVo attrGroupEntityVo=new AttrGroupEntityVo();
+    private AttrGroupEntityVo switchEntityToVo(AttrGroupEntity attrGroupEntity) {
+        AttrGroupEntityVo attrGroupEntityVo = new AttrGroupEntityVo();
         attrGroupEntityVo.setAttrGroupId(attrGroupEntity.getAttrGroupId());
         attrGroupEntityVo.setAttrGroupName(attrGroupEntity.getAttrGroupName());
         attrGroupEntityVo.setCatelogId(attrGroupEntity.getCatelogId());

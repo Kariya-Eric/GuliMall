@@ -6,9 +6,11 @@ import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerIntercept
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 //mybatis-plus 3.5* 版本的分页插件配置
 @Configuration
+@EnableTransactionManagement //开启事务注解
 @MapperScan("org.kariya.gulimall.product.dao")
 public class MybatisplusConfig {
 

@@ -3,6 +3,8 @@ package org.kariya.gulimall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.kariya.common.utils.PageUtils;
 import org.kariya.gulimall.product.entity.AttrEntity;
+import org.kariya.gulimall.product.vo.AttrEditVo;
+import org.kariya.gulimall.product.vo.AttrVo;
 
 import java.util.Map;
 
@@ -16,5 +18,11 @@ import java.util.Map;
 public interface AttrService extends IService<AttrEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void saveAttr(AttrVo attrvo);
+
+    AttrEditVo getAttrEditVoById(Long attrId);
+
+    void updateAttr(AttrVo attrvo);
 }
 

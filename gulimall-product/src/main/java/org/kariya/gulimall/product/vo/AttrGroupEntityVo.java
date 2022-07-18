@@ -8,7 +8,6 @@ public class AttrGroupEntityVo {
     /**
      * 分组id
      */
-    @TableId
     private Long attrGroupId;
     /**
      * 组名

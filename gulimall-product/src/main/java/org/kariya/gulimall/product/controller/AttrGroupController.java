@@ -1,9 +1,11 @@
 package org.kariya.gulimall.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.kariya.gulimall.product.vo.AttrGroupEntityVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +18,6 @@ import org.kariya.gulimall.product.entity.AttrGroupEntity;
 import org.kariya.gulimall.product.service.AttrGroupService;
 import org.kariya.common.utils.PageUtils;
 import org.kariya.common.utils.R;
-
 
 
 /**
@@ -37,7 +38,7 @@ public class AttrGroupController {
      */
     @RequestMapping("/list")
     //@RequiresPermissions("product:attrgroup:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
 
         PageUtils page = attrGroupService.queryPage(params);
 
@@ -50,7 +51,7 @@ public class AttrGroupController {
      */
     @RequestMapping("/info/{attrGroupId}")
     //@RequiresPermissions("product:attrgroup:info")
-    public R info(@PathVariable("attrGroupId") Long attrGroupId){
+    public R info(@PathVariable("attrGroupId") Long attrGroupId) {
         AttrGroupEntityVo attrGroup = attrGroupService.getInfoById(attrGroupId);
 
         return R.ok().put("attrGroup", attrGroup);
@@ -61,8 +62,8 @@ public class AttrGroupController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("product:attrgroup:save")
-    public R save(@RequestBody AttrGroupEntity attrGroup){
-		attrGroupService.save(attrGroup);
+    public R save(@RequestBody AttrGroupEntity attrGroup) {
+        attrGroupService.save(attrGroup);
 
         return R.ok();
     }
@@ -72,8 +73,8 @@ public class AttrGroupController {
      */
     @RequestMapping("/update")
     //@RequiresPermissions("product:attrgroup:update")
-    public R update(@RequestBody AttrGroupEntity attrGroup){
-		attrGroupService.updateById(attrGroup);
+    public R update(@RequestBody AttrGroupEntity attrGroup) {
+        attrGroupService.updateById(attrGroup);
 
         return R.ok();
     }
@@ -83,10 +84,18 @@ public class AttrGroupController {
      */
     @RequestMapping("/delete")
     //@RequiresPermissions("product:attrgroup:delete")
-    public R delete(@RequestBody Long[] attrGroupIds){
-		attrGroupService.removeByIds(Arrays.asList(attrGroupIds));
+    public R delete(@RequestBody Long[] attrGroupIds) {
+        attrGroupService.removeByIds(Arrays.asList(attrGroupIds));
 
         return R.ok();
     }
 
+    //分组初始化
+    @RequestMapping("/init/{id}")
+    public R init(@PathVariable("id") String id) {
+        List<AttrGroupEntity> list = attrGroupService.list(
+                new QueryWrapper<AttrGroupEntity>().eq("catelog_id", id)
+        );
+        return R.ok().put("data", list);
+    }
 }

@@ -59,9 +59,8 @@ public class CategoryBrandRelationController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("product:categorybrandrelation:save")
-    public R save(@RequestBody CategoryBrandRelationEntity categoryBrandRelation){
-		categoryBrandRelationService.save(categoryBrandRelation);
-
+    public R save(@RequestParam Map<String, Object> params){
+		categoryBrandRelationService.saveRelation(params);
         return R.ok();
     }
 

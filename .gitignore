@@ -14,3 +14,5 @@ buildNumber.properties
 **/**.iml
 
 renren-generator/
+
+**/src/test/
